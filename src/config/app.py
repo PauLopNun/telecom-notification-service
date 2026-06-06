@@ -11,7 +11,12 @@ from src.infrastructure.web.fastapi.self_ping import register_self_ping_schedule
 
 def create_app(settings: Settings | None = None) -> FastAPI:
     app_settings = settings or get_settings()
-    app = FastAPI(title=app_settings.app_name)
+    app = FastAPI(
+        title=app_settings.app_name,
+        docs_url="/docs",
+        redoc_url="/redoc",
+        openapi_url="/openapi.json",
+    )
     register_error_handlers(app)
     register_self_ping_scheduler(app)
     app.include_router(health_router)

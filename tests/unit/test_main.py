@@ -18,3 +18,5 @@ def test_should_create_fastapi_app_when_main_module_is_imported(
     main_module = importlib.import_module("src.main")
 
     assert main_module.app.title == DEFAULT_APP_NAME
+    assert main_module.app.docs_url == "/docs"
+    assert main_module.app.openapi_url == "/openapi.json"

@@ -15,6 +15,15 @@ def test_should_return_ok_when_health_check_is_requested() -> None:
     assert response.json() == {"status": "ok"}
 
 
+def test_should_return_service_info_when_root_is_requested() -> None:
+    client = TestClient(create_app(_settings()))
+
+    response = client.get("/")
+
+    assert response.status_code == 200
+    assert response.json()["name"] == "telecom-notification-service"
+
+
 def _settings() -> Settings:
     return Settings(
         app_name="test-app",

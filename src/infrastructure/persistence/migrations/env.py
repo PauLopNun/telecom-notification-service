@@ -4,8 +4,11 @@ from os import getenv
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
+from src.config.exceptions import ConfigurationError
 from src.infrastructure.persistence.sqlalchemy.base import Base
-from src.infrastructure.persistence.sqlalchemy.notification_model import NotificationModel
+from src.infrastructure.persistence.sqlalchemy.notification_model import (
+    NotificationModel,
+)
 
 DATABASE_URL_ENV_NAME = "DATABASE_URL"
 REGISTERED_MODELS = (NotificationModel,)
@@ -19,10 +22,12 @@ target_metadata = Base.metadata
 
 
 def get_database_url() -> str:
-    database_url = getenv(DATABASE_URL_ENV_NAME)
-    if database_url is None:
-        return config.get_main_option("sqlalchemy.url")
-    return database_url.replace("+asyncpg", "")
+    database_url = getenv(DATABASE_URL_ENV_NAME) or config.get_main_option(
+        "sqlalchemy.url"
+    )
+    if database_url is None or not database_url.strip():
+        raise ConfigurationError(f"{DATABASE_URL_ENV_NAME} is required")
+    return database_url.replace("postgresql+asyncpg://", "postgresql+psycopg://")
 
 
 def run_migrations_offline() -> None:
@@ -39,7 +44,11 @@ def run_migrations_offline() -> None:
 def run_migrations_online() -> None:
     configuration = config.get_section(config.config_ini_section) or {}
     configuration["sqlalchemy.url"] = get_database_url()
-    engine = engine_from_config(configuration, prefix="sqlalchemy.", poolclass=pool.NullPool)
+    engine = engine_from_config(
+        configuration,
+        prefix="sqlalchemy.",
+        poolclass=pool.NullPool,
+    )
     with engine.connect() as connection:
         context.configure(connection=connection, target_metadata=target_metadata)
         with context.begin_transaction():

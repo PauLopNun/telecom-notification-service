@@ -6,14 +6,19 @@
 ![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-2.0-D71F00)
 ![CI](https://img.shields.io/badge/CI-GitHub_Actions-2088FF?logo=githubactions&logoColor=white)
 
-I built this microservice to practice Python backend development with a
-real-world telecom use case. The service receives network and service alerts,
-stores them in PostgreSQL, and exposes a REST API to query notifications by
-client, event type, and status.
+I built this microservice to practice Python backend development with a real
+telecom use case. It receives network and service alerts, stores them in
+PostgreSQL, and exposes a REST API to query notifications by client, event
+type, and status.
 
-I wanted the project to feel close to backend work I would do in a team, so I
-used Hexagonal Architecture and kept FastAPI, SQLAlchemy, and messaging concerns
-outside the domain and use case layers.
+I wanted the project to feel close to the backend work I would do in a team, so
+I used Hexagonal Architecture and kept FastAPI, SQLAlchemy, and messaging
+concerns outside the domain and use case layers.
+
+## Live Demo
+
+- API: https://telecom-notification-service.onrender.com
+- Docs: https://telecom-notification-service.onrender.com/docs
 
 ## Tech Stack
 
@@ -77,6 +82,29 @@ The current coverage gate is 100%.
 
 Filters for `GET /api/v1/notifications`: `client_id`, `event_type`, `status`,
 `limit`, and `offset`.
+
+## Example Usage
+
+Create a notification:
+
+```bash
+curl -X POST https://telecom-notification-service.onrender.com/api/v1/notifications \
+  -H "Content-Type: application/json" \
+  -d '{
+    "client_id": "client-789",
+    "event_type": "SECURITY_ALERT",
+    "message": "Suspicious access detected",
+    "metadata": {"region": "west"}
+  }'
+```
+
+Update its status:
+
+```bash
+curl -X PATCH https://telecom-notification-service.onrender.com/api/v1/notifications/<notification_id>/status \
+  -H "Content-Type: application/json" \
+  -d '{"status":"SENT"}'
+```
 
 ## Environment Variables
 

@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: telecom-notification-service
+    runtime: python
+    plan: free
+    branch: main
+    buildCommand: pip install -r requirements.txt
+    startCommand: >
+      alembic upgrade head &&
+      uvicorn src.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: APP_NAME
+        value: telecom-notification-service
+      - key: API_PREFIX
+        value: /api/v1
+      - key: ENVIRONMENT
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: telecom-notification-db
+          property: connectionString
+
+databases:
+  - name: telecom-notification-db
+    databaseName: telecom_notifications
+    user: telecom_user
+    plan: free
+    postgresMajorVersion: 16

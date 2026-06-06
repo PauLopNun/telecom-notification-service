@@ -73,6 +73,7 @@ async def list_notifications(
         offset=offset,
     )
     outputs = await use_case.execute(input_data)
+    # TODO: add pagination metadata to response headers.
     return [to_response(output) for output in outputs]
 
 

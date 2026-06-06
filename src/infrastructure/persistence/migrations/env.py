@@ -27,7 +27,7 @@ def get_database_url() -> str:
     )
     if database_url is None or not database_url.strip():
         raise ConfigurationError(f"{DATABASE_URL_ENV_NAME} is required")
-    return database_url.replace("postgresql+asyncpg://", "postgresql+psycopg://")
+    return _normalize_database_url(database_url)
 
 
 def run_migrations_offline() -> None:
@@ -54,6 +54,14 @@ def run_migrations_online() -> None:
         with context.begin_transaction():
             context.run_migrations()
     engine.dispose()
+
+
+def _normalize_database_url(database_url: str) -> str:
+    if database_url.startswith("postgres://"):
+        return database_url.replace("postgres://", "postgresql+psycopg://", 1)
+    if database_url.startswith("postgresql://"):
+        return database_url.replace("postgresql://", "postgresql+psycopg://", 1)
+    return database_url.replace("postgresql+asyncpg://", "postgresql+psycopg://")
 
 
 if context.is_offline_mode():

@@ -9,7 +9,7 @@ addopts = [
     "--cov=src",
     "--cov-report=term-missing",
     "--cov-report=xml",
-    "--cov-fail-under=80",
+    "--cov-fail-under=100",
 ]
 asyncio_mode = "auto"
 testpaths = ["tests"]
@@ -20,7 +20,7 @@ source = ["src"]
 omit = ["src/infrastructure/persistence/migrations/*"]
 
 [tool.coverage.report]
-fail_under = 80
+fail_under = 100
 show_missing = true
 skip_covered = true
 

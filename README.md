@@ -62,6 +62,7 @@ pytest
 
 Integration tests use `TEST_DATABASE_URL` when it exists. Otherwise, they start
 a PostgreSQL container with testcontainers-python.
+The current coverage gate is 100%.
 
 ## API Endpoints
 

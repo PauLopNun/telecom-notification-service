@@ -5,10 +5,10 @@ from fastapi import APIRouter, Depends, Query, status
 
 from src.application.dtos.notification_dtos import (
     DEFAULT_NOTIFICATION_LIMIT,
-    ListNotificationsInput,
     MAX_NOTIFICATION_LIMIT,
     MIN_NOTIFICATION_LIMIT,
     MIN_NOTIFICATION_OFFSET,
+    ListNotificationsInput,
 )
 from src.application.use_cases import (
     CreateNotificationUseCase,

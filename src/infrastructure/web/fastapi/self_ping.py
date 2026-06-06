@@ -14,8 +14,8 @@ scheduler = AsyncIOScheduler()
 
 
 def register_self_ping_scheduler(app: FastAPI) -> None:
-    app.add_event_handler("startup", start_self_ping_scheduler)
-    app.add_event_handler("shutdown", stop_self_ping_scheduler)
+    app.router.on_startup.append(start_self_ping_scheduler)
+    app.router.on_shutdown.append(stop_self_ping_scheduler)
 
 
 async def start_self_ping_scheduler() -> None:
